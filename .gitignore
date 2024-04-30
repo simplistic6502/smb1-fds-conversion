@@ -1,0 +1,7 @@
+*.nes
+*.fds
+*.nes.map
+*.dbg
+*.lst
+*.deb
+*.bin
