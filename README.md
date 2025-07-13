@@ -5,7 +5,7 @@ A port of the disk version of Super Mario Bros. to the UNROM mapper.
 ## Download
 
 This patch can be retrieved from the link below:
-- [Patch](https://github.com/simplistic6502/smb1-fds-conversion/releases/tag/yeah)
+- [Patch](https://github.com/simplistic6502/smb1-fds-conversion/releases/tag/UNROM)
 
 Apply the patch to a clean Super Mario Bros. NES ROM. An example MD5 hash of the ROM needed is `811b027eaf99c2def7b933c5208636de`.
 
