@@ -20,9 +20,9 @@ JOY2_FRAME            = $4017
   .db $4E,$45,$53,$1A                           ;  magic signature
   .db 4                                         ;  PRG ROM size in 16384 byte units
   .db 0                                         ;  CHR
-  .db $11                                       ;  mirroring type and mapper number lower nibble
-  .db $00                                       ;  mapper number upper nibble
-  .db $00,$00,$00,$00,$00,$00,$00,$00           ;  padding
+  .db $21                                       ;  mirroring type and mapper number lower nibble
+  .db $08                                       ;  mapper number upper nibble
+  .db $00,$00,$07,$07,$00,$00,$00,$01           ;  padding
 
 .fillvalue $ff
 
@@ -30,21 +30,17 @@ JOY2_FRAME            = $4017
 ;BANK 0
 ;contents are written to PRG-RAM and CHR-RAM
 
-.org $8000
+.base $8000
 	.incbin "prg.bin",$0,$2000	;$6000-$7FFF from FDS version
 	.incbin "conversion.chr"    ;CHR data
+.pad $c000,$ff
 
 ;-------------------------------------------------------------------------------------
 ;BANK 1
 ;empty bank
 
-.pad $fff3
-	sei             ;reset stub in case MMC1 defaults to PRG-ROM bank mode 0 or 1
-	inc ResetStub+1 ;reset MMC1
-	jmp Reset
-	.dw NMI         ;nmi
-    .dw ResetStub   ;reset
-    .dw $fff0       ;unused
+.base $8000
+.pad $c000,$ff
 
 ;-------------------------------------------------------------------------------------
 ;BANKS 2 & 3
@@ -55,17 +51,7 @@ JOY2_FRAME            = $4017
 .pad $e000,$ff
 
 Reset:
-	lda #%00001110			;init MMC1 mapper (vertical mirroring & PRG-ROM bank mode 3)
-	sta $8000
-	lsr
-	sta $8000
-	lsr
-	sta $8000
-	lsr
-	sta $8000
-	lsr
-	sta $8000
-
+	sei
 	lda #$10				;replicate init code present in FDS BIOS
 	sta PPU_CTRL
 	cld
@@ -231,23 +217,16 @@ prg_e1ef:
 
 ;-------------------------------------------------------------------------------------
 
-.org $ffdf,$ff
-SelectBank:
-	sta $e000
-	lsr
-	sta $e000
-	lsr
-	sta $e000
-	lsr
-	sta $e000
-	lsr
-	sta $e000
-	rts	
+.org $ff00,$ff
+Banktable:
+	.db $00, $01, $02, $03
 
-ResetStub:
-	sei             ;reset stub
-	inc ResetStub+1 ;reset MMC1
-	jmp Reset
+SelectBank:
+	tay
+	sta Banktable,y
+	rts
+
+.pad $fffa,$ff
 	.dw NMI         ;nmi
-    .dw ResetStub   ;reset
+    .dw Reset  		;reset
     .dw IRQ         ;unused

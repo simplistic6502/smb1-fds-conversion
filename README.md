@@ -1,6 +1,6 @@
-# Super Mario Bros. (FDS) MMC1 Port
+# Super Mario Bros. (FDS) UNROM Port
 
-A port of the disk version of Super Mario Bros. to the MMC1 mapper.
+A port of the disk version of Super Mario Bros. to the UNROM mapper.
 
 ## Download
 
